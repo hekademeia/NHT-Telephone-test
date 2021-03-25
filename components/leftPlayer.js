@@ -3,7 +3,7 @@ import * as AudioFiles from "./audioSelector";
 
 // Play audio file
 export const playLeftSound = async audioTrack => {
-  sound = AudioFiles.audioSelector(audioTrack);
+  let sound = AudioFiles.audioSelector(audioTrack);
   setTimeout(() => {
     Audio.Sound
       .createAsync(sound, { shouldPlay: true })

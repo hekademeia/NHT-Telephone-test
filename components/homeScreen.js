@@ -40,6 +40,13 @@ import * as MailComposer from 'expo-mail-composer';
 const DeviceHeight = Dimensions.get("window").height;
 const DeviceWidth = Dimensions.get("window").width;
 var fileWriter = [];
+
+// settings for development
+//const NUM_TRIALS = 2;
+
+// settings for production
+const NUM_TRIALS = 30;
+
 export default class HomeScreen extends Component<Props> {
   constructor(props) {
     super(props);
@@ -92,7 +99,7 @@ export default class HomeScreen extends Component<Props> {
       var array = [...this.state.left]; // make a separate copy of the array
       const currentVal = array[0];
       const newArray = array.slice(1, 0).concat(array.slice(1, array.length));
-      currentTrackString =
+      let currentTrackString =
         this.state.currentTrack + "_" + this.state.currentLevel;
       this.setState({ left: newArray });
       this.setState({ currentTrack: currentVal });
@@ -100,7 +107,7 @@ export default class HomeScreen extends Component<Props> {
       var array = [...this.state.right]; // make a separate copy of the array
       const currentVal = array[0];
       const newArray = array.slice(1, 0).concat(array.slice(1, array.length));
-      currentTrackString =
+      let currentTrackString =
         this.state.currentTrack + "_" + this.state.currentLevel;
       this.setState({ right: newArray });
       this.setState({ currentTrack: currentVal });
@@ -137,7 +144,7 @@ export default class HomeScreen extends Component<Props> {
         this.setState({ leftStatus: true });
       } else if (
         this.state.leftCorrectResponses >= 0 &&
-        this.state.leftCounter < 30
+        this.state.leftCounter < NUM_TRIALS
       ) {
         var array = [...this.state.left];
         const currentVal = array[0];
@@ -196,7 +203,7 @@ export default class HomeScreen extends Component<Props> {
         this.setState({ rightStatus: true });
       } else if (
         this.state.rightCorrectResponses >= 0 &&
-        this.state.rightCounter < 30
+        this.state.rightCounter < NUM_TRIALS
       ) {
         var array = [...this.state.right];
         const currentVal = array[0];
@@ -276,7 +283,7 @@ export default class HomeScreen extends Component<Props> {
       this.setState({ isOverlayVisible: true });
       return;
     }
-    currentTrackString =
+    let currentTrackString =
       this.state.currentTrack +
       "_" +
       this.state.currentLevel +
@@ -309,10 +316,10 @@ export default class HomeScreen extends Component<Props> {
   }
   // This method will select 20 files randomly for each ear and add it to the state variables left and right
   UNSAFE_componentWillMount() {
-    Leftvisited = [];
-    //randomly selecting 30 files for the left ear
-    while (Leftvisited.length < 30) {
-      randNumber = Math.floor(Math.random() * 64);
+    let Leftvisited = [];
+    //randomly selecting NUM_TRIALS files for the left ear
+    while (Leftvisited.length < NUM_TRIALS) {
+      let randNumber = Math.floor(Math.random() * 64);
       if (Leftvisited.includes(Constants.audioFiles[randNumber])) {
         continue;
       } else {
@@ -322,10 +329,10 @@ export default class HomeScreen extends Component<Props> {
     //setting state variable left according to the audio files selected
     this.setState({ left: Leftvisited });
 
-    RightVisited = [];
-    //randomly selecting 30 files for the right ear which haven't been used for the left ear
-    while (RightVisited.length < 30) {
-      randNumber = Math.floor(Math.random() * 64);
+    let RightVisited = [];
+    //randomly selecting NUM_TRIALS files for the right ear which haven't been used for the left ear
+    while (RightVisited.length < NUM_TRIALS) {
+      let randNumber = Math.floor(Math.random() * 64);
       if (
         Leftvisited.includes(Constants.audioFiles[randNumber]) ||
         RightVisited.includes(Constants.audioFiles[randNumber])
@@ -359,9 +366,9 @@ export default class HomeScreen extends Component<Props> {
   // The function intakes the num argument as the num of space views and val argument in order to assign a unique key to
   // each view which is an important aspect for react components
   spaceView = (num, val) => {
-    returnDiv = [];
+    let returnDiv = [];
     for (let i = 0; i < num; i++) {
-      keyValue = `${val}` + `${i}`;
+      let keyValue = `${val}` + `${i}`;
       returnDiv.push(<SpaceView key={keyValue} />);
     }
     return (
@@ -493,7 +500,7 @@ export default class HomeScreen extends Component<Props> {
   }
 
   renderAudioButton() {
-    // if (this.state.leftCounter == 30 || this.state.rightCounter == 30) {
+    // if (this.state.leftCounter == NUM_TRIALS || this.state.rightCounter == NUM_TRIALS) {
     //   console.log(
     //     "selected ear is " +
     //       this.state.currentEar +
@@ -645,7 +652,7 @@ export default class HomeScreen extends Component<Props> {
       setTimeout(() => {MailComposer.composeAsync({
       recipients :["kidd@iu.edu"],
       subject:"Results for Client ID: "+ this.props.navigation.state.params.clientID + " and Test ID: " + this.props.navigation.state.params.testID,
-      body:finalWriteStr + "\n\n" + "Thank You,\nNHT Group" 
+      body:finalWriteStr + "\n\n" + "Thank You,\nNHT Group"
     })}, 3000)
       return <ThankYou />;
     } else {
@@ -666,6 +673,7 @@ export default class HomeScreen extends Component<Props> {
           >
             {this.state.inputText}
           </Text>
+          <Text>{this.state.currentEar}</Text>
           {this.spaceView(5, "numpad")}
           <View style={styles.ButtonViewStyle}>
             {this.returnButton("1")}

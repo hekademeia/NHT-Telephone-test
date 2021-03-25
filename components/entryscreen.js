@@ -31,9 +31,9 @@ export default class Initialscreen extends Component<Props> {
   }
 
   spaceView = (num, val) => {
-    returnDiv = [];
+    let returnDiv = [];
     for (let i = 0; i < num; i++) {
-      keyValue = `${val}` + `${i}`;
+      let keyValue = `${val}` + `${i}`;
       returnDiv.push(<SpaceView key={keyValue} />);
     }
     return (
@@ -162,7 +162,7 @@ export default class Initialscreen extends Component<Props> {
               paddingRight: 10
             }}
           >
-            
+
             <Button
               title="Begin Test"
               onPress={() => {
