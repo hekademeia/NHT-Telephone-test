@@ -33,7 +33,8 @@ import { Overlay } from "react-native-elements";
 import * as LeftPlayer from "./leftPlayer";
 import * as RightPlayer from "./rightPlayer";
 import ThankYou from "./thankYou";
-import * as MailComposer from 'expo-mail-composer';
+//import * as MailComposer from 'expo-mail-composer';
+import Communications from 'react-native-communications';
 
 
 
@@ -649,11 +650,18 @@ export default class HomeScreen extends Component<Props> {
       for (let i = 0; i < fileWriter.length; i++) {
         finalWriteStr = finalWriteStr + "\n" + fileWriter[i];
       }
-      setTimeout(() => {MailComposer.composeAsync({
-      recipients :["kidd@iu.edu"],
-      subject:"Results for Client ID: "+ this.props.navigation.state.params.clientID + " and Test ID: " + this.props.navigation.state.params.testID,
-      body:finalWriteStr + "\n\n" + "Thank You,\nNHT Group"
-    })}, 3000)
+      setTimeout(() => {
+        // MailComposer.composeAsync({
+        //   recipients :["kidd@iu.edu"],
+        //   subject:"Results for Client ID: "+ this.props.navigation.state.params.clientID + " and Test ID: " + this.props.navigation.state.params.testID,
+        //   body:finalWriteStr + "\n\n" + "Thank You,\nNHT Group"
+        // })
+        Communications.email(
+          ['kidd@iu.edu'],null,null,
+          "Results for Client ID: "+ this.props.navigation.state.params.clientID + " and Test ID: " + this.props.navigation.state.params.testID,
+          finalWriteStr + "\n\n" + "Thank You,\nNHT Group"
+        )
+      }, 3000)
       return <ThankYou />;
     } else {
       return (
@@ -673,7 +681,6 @@ export default class HomeScreen extends Component<Props> {
           >
             {this.state.inputText}
           </Text>
-          <Text>{this.state.currentEar}</Text>
           {this.spaceView(5, "numpad")}
           <View style={styles.ButtonViewStyle}>
             {this.returnButton("1")}
