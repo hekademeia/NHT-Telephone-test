@@ -9,7 +9,8 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
-  Platform
+  Platform,
+  Alert
 } from "react-native";
 import {
   Card,
@@ -34,7 +35,7 @@ import * as LeftPlayer from "./leftPlayer";
 import * as RightPlayer from "./rightPlayer";
 import ThankYou from "./thankYou";
 //import * as MailComposer from 'expo-mail-composer';
-import Communications from 'react-native-communications';
+//import Communications from 'react-native-communications';
 
 
 
@@ -42,11 +43,12 @@ const DeviceHeight = Dimensions.get("window").height;
 const DeviceWidth = Dimensions.get("window").width;
 var fileWriter = [];
 
-// settings for development
-//const NUM_TRIALS = 2;
-
-// settings for production
-const NUM_TRIALS = 30;
+let NUM_TRIALS = 30;
+let senderURL = "http://nht.iu.hekademeia.org/email.php";
+if(__DEV__){ // settings for development
+  NUM_TRIALS = 2;
+  senderURL = "http://localhost:8887/email.php";
+}
 
 export default class HomeScreen extends Component<Props> {
   constructor(props) {
@@ -656,12 +658,29 @@ export default class HomeScreen extends Component<Props> {
         //   subject:"Results for Client ID: "+ this.props.navigation.state.params.clientID + " and Test ID: " + this.props.navigation.state.params.testID,
         //   body:finalWriteStr + "\n\n" + "Thank You,\nNHT Group"
         // })
-        Communications.email(
+        /*Communications.email(
           ['kidd@iu.edu'],null,null,
           "Results for Client ID: "+ this.props.navigation.state.params.clientID + " and Test ID: " + this.props.navigation.state.params.testID,
           finalWriteStr + "\n\n" + "Thank You,\nNHT Group"
-        )
-      }, 3000)
+        )*/
+        fetch(senderURL,{
+          method: "POST",
+          headers: new Headers({
+             'Content-Type': 'application/x-www-form-urlencoded'
+          }),
+          body: "cid="+this.props.navigation.state.params.clientID
+            +"&tid="+this.props.navigation.state.params.testID
+            +"&body="+finalWriteStr
+        }).then((rsp) => rsp.json()).then((json)=>{
+          console.log(json)
+          if(json.err==0)
+            Alert.alert(
+              "An Error Ocurred",
+              "There was a problem sending the results!",
+              [{ text: 'OK', onPress: ()=>console.log(json.err) }]
+            )
+        })
+      }, 250)
       return <ThankYou />;
     } else {
       return (
