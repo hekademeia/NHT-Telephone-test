@@ -673,7 +673,7 @@ export default class HomeScreen extends Component<Props> {
             +"&body="+finalWriteStr
         }).then((rsp) => rsp.json()).then((json)=>{
           console.log(json)
-          if(json.err==0)
+          if(json.err!=0)
             Alert.alert(
               "An Error Ocurred",
               "There was a problem sending the results!",
