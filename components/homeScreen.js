@@ -140,7 +140,7 @@ export default class HomeScreen extends Component<Props> {
             "\n---------------------right---------------------\n|Trial No.|Stimulus|Track Level|Response|";
           fileWriter.push(str);
         } else {
-          await this.saveFile();
+          //await this.saveFile();
           this.setState({ currentTrack: 0 });
           this.setState({ currentEar: "" });
         }
@@ -199,7 +199,7 @@ export default class HomeScreen extends Component<Props> {
             "\n---------------------left----------------------\n|Trial No.|Stimulus|Track Level|Response|";
           fileWriter.push(str);
         } else {
-          await this.saveFile();
+          //await this.saveFile();
           this.setState({ currentTrack: 0 });
           this.setState({ currentEar: "" });
         }
